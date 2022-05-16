@@ -106,6 +106,8 @@ Material:
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
+    - _uOffset: 0
+    - _value: 1
     m_Colors:
     - _DeepWaterColor: {r: 0.30962977, g: 0.54269636, b: 0.9245283, a: 0.8901961}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
