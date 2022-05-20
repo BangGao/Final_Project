@@ -57,7 +57,7 @@ namespace StarterAssets
         public float GroundedOffset = -0.14f;
 
         [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-        public float GroundedRadius = 0.28f;
+        public float GroundedRadius = 0.10f;
 
         [Tooltip("What layers the character uses as ground")]
         public LayerMask GroundLayers;
