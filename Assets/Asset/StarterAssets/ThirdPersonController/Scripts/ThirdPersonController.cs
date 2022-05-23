@@ -78,6 +78,14 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        [Header("Object Name Get By Ray")]
+        public string ObjectName;
+        
+        //camera
+        private Camera _cameraRay;
+        private GameObject _objectGetByRay;
+        
+        
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -109,6 +117,9 @@ namespace StarterAssets
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
         
+        //Check if player stands on farmlands
+        private GameObject _sphereColliderWith;
+        
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
@@ -137,6 +148,8 @@ namespace StarterAssets
 
         private void Start()
         {
+            _cameraRay = Camera.main;
+            
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -159,9 +172,11 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            CatchObjectByRay();
             JumpAndGravity();
             GroundedCheck();
             Move();
+            
         }
 
         private void LateUpdate()
@@ -169,6 +184,17 @@ namespace StarterAssets
             CameraRotation();
         }
 
+        private void CatchObjectByRay()
+        {
+            Ray ray = _cameraRay.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit hit;
+            if (Physics.Raycast(ray,out hit))
+            {
+                _objectGetByRay = hit.collider.gameObject;
+                ObjectName = _objectGetByRay.name;
+            }
+        }
+        
         private void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
