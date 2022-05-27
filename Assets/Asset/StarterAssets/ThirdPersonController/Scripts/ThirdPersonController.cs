@@ -78,14 +78,6 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
-        [Header("Object Name Get By Ray")]
-        public string ObjectName;
-        
-        //camera
-        private Camera _cameraRay;
-        private GameObject _objectGetByRay;
-        
-        
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -148,9 +140,7 @@ namespace StarterAssets
 
         private void Start()
         {
-            _cameraRay = Camera.main;
-            
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+           _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
@@ -172,7 +162,7 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            CatchObjectByRay();
+          
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -181,17 +171,6 @@ namespace StarterAssets
         private void LateUpdate()
         {
             CameraRotation();
-        }
-
-        private void CatchObjectByRay()
-        {
-            Ray ray = _cameraRay.ScreenPointToRay(Mouse.current.position.ReadValue());
-            RaycastHit hit;
-            if (Physics.Raycast(ray,out hit))
-            {
-                _objectGetByRay = hit.collider.gameObject;
-                ObjectName = _objectGetByRay.name;
-            }
         }
         
         private void AssignAnimationIDs()
