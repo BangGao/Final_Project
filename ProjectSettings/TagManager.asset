@@ -6,6 +6,10 @@ TagManager:
   tags:
   - CinemachineTarget
   - Field
+  - CollisionDetector
+  - CornStart
+  - WaterMelonStart
+  - CabbageStart
   layers:
   - Default
   - TransparentFX

@@ -2,26 +2,42 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using StarterAssets;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.Events;
 
 public class MenuController : MonoBehaviour
 {
+    public static MenuController instance;
+
+    [Header("Globo Vary")]
+    public static GameObject _objectGetByRay;
+    
     public UnityAction _action;
-    public UnityEvent _myevent; 
+    public UnityAction _plantButtomAction;
     
-    public GameObject _uIElement_Field;
-    public string ObjectName;
+    public UnityEvent _myevent;
     
-    public GameObject _objectGetByRay;
+    [Header("Select Field")]
+    public GameObject _plantMenu;
+   
+
+    private GameObject temp; 
+    public bool _aimField;
+    
     private Camera _cameraRay;
     private bool _isOpened;
     private bool _canOpenPlantMenu;
-    private bool _aimField;
-    
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+
     void Start()
     {
-        _action = new UnityAction(plantMenu);
+        _action = new UnityAction(OpenPlantMenu);
         _myevent = new UnityEvent();
         _myevent.AddListener(_action);
         
@@ -32,7 +48,6 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         _myevent.Invoke();
-        //CatchObjectByRay();
     }
 
     private void OnTriggerStay(Collider other)
@@ -48,16 +63,16 @@ public class MenuController : MonoBehaviour
         _canOpenPlantMenu = false;
     }
 
-    private void plantMenu()
+    private void OpenPlantMenu()
     {
         Ray ray = _cameraRay.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
         if (Physics.Raycast(ray,out hit))
         {
-            _objectGetByRay = hit.collider.gameObject;
-            if (_objectGetByRay.tag == "Field")
+            if (hit.collider.gameObject.tag == "Field")
             {
                 _aimField = true;
+                _objectGetByRay = hit.collider.gameObject;
             }
             else
             {
@@ -65,10 +80,18 @@ public class MenuController : MonoBehaviour
             }
         }
         
-        _uIElement_Field.SetActive(_isOpened);
+        _plantMenu.SetActive(_isOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _aimField)
         {
             _isOpened = !_isOpened;
         }
+    }
+
+    public GameObject PassDataToMenu()
+    {
+        if (_objectGetByRay != null)
+            return _objectGetByRay;
+        else
+            return temp;
     }
 }
