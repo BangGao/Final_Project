@@ -13,20 +13,20 @@ public class MenuController : MonoBehaviour
     [Header("Globo Vary")]
     public static GameObject _objectGetByRay;
     
-    public UnityAction _action;
-    public UnityAction _plantButtomAction;
-    
-    public UnityEvent _myevent;
+    public UnityAction action;
+
+    public UnityEvent myEvent;
     
     [Header("Select Field")]
-    public GameObject _plantMenu;
+    public GameObject plantMenu;
    
 
-    private GameObject temp; 
+    private GameObject _temp; 
     public bool _aimField;
     
     private Camera _cameraRay;
     private bool _isOpened;
+    private bool _showCursor;
     private bool _canOpenPlantMenu;
 
     private void Awake()
@@ -37,9 +37,9 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        _action = new UnityAction(OpenPlantMenu);
-        _myevent = new UnityEvent();
-        _myevent.AddListener(_action);
+        action = new UnityAction(OpenPlantMenu);
+        myEvent = new UnityEvent();
+        myEvent.AddListener(action);
         
         _cameraRay = Camera.main;
         GetComponent<PlayerInput>();
@@ -47,7 +47,7 @@ public class MenuController : MonoBehaviour
     
     void Update()
     {
-        _myevent.Invoke();
+        myEvent.Invoke();
     }
 
     private void OnTriggerStay(Collider other)
@@ -80,18 +80,14 @@ public class MenuController : MonoBehaviour
             }
         }
         
-        _plantMenu.SetActive(_isOpened);
+        plantMenu.SetActive(_isOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _aimField)
         {
             _isOpened = !_isOpened;
+            
+            //Show Mouse Cursor or not
+            _showCursor = !_showCursor;
+            MouseController.ShowMouse(_showCursor);
         }
-    }
-
-    public GameObject PassDataToMenu()
-    {
-        if (_objectGetByRay != null)
-            return _objectGetByRay;
-        else
-            return temp;
     }
 }
