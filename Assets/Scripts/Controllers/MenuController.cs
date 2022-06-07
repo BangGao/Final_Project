@@ -4,55 +4,84 @@ using UnityEngine.InputSystem;
 using StarterAssets;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
 
 public class MenuController : MonoBehaviour
 {
-    public static MenuController instance;
+    [Header("Event List")] public UnityEvent Event;
 
-    [Header("Globo Vary")]
-    public static GameObject _objectGetByRay;
+    [Header("Plants")] 
+    [SerializeField] private GameObject _cornStart;
+    [SerializeField] private GameObject _waterMelonStart;
+    [SerializeField] private GameObject _cabbageStart;
     
-    public UnityAction action;
-
-    public UnityEvent myEvent;
-    
-    [Header("Select Field")]
+    [Header("Menus")]
     public GameObject plantMenu;
-   
-
-    private GameObject _temp; 
-    public bool _aimField;
+    private CanvasGroup _canvasGroup;
     
-    private Camera _cameraRay;
+    [Header("Buttons")]
+    [SerializeField] private Button button1;
+    [SerializeField] private Button button2;
+    [SerializeField] private Button button3;
+    [SerializeField] public Button closeButton;
+    
     private bool _isOpened;
     private bool _showCursor;
     private bool _canOpenPlantMenu;
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
 
     void Start()
     {
-        action = new UnityAction(OpenPlantMenu);
-        myEvent = new UnityEvent();
-        myEvent.AddListener(action);
-        
-        _cameraRay = Camera.main;
-        GetComponent<PlayerInput>();
+        _canvasGroup = plantMenu.GetComponent<CanvasGroup>();
     }
+    
     
     void Update()
     {
-        myEvent.Invoke();
+        OpenPlantMenu();
+        
     }
 
-    private void OnTriggerStay(Collider other)
+    private void MonitorButtons()
     {
-        if (other.tag =="CollisionDetector")
+        
+    }
+    
+    
+    public void PlantCorn()
+    {
+        _cornStart.SetActive(true);
+    }
+
+    public void PlantWaterMelon()
+    {
+        _waterMelonStart.SetActive(true);
+    }
+    
+    public void PlantCabbage()
+    {
+        _cabbageStart.SetActive(true);
+    }
+
+   
+    private void OpenPlantMenu()
+    {
+        plantMenu.SetActive(_isOpened);
+        if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu)
+        {
+            _isOpened = !_isOpened;
+            _showCursor = !_showCursor;
+            MouseController.ShowMouse(_showCursor);
+        }
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
         {
             _canOpenPlantMenu = true;
         }
@@ -62,32 +91,5 @@ public class MenuController : MonoBehaviour
     {
         _canOpenPlantMenu = false;
     }
-
-    private void OpenPlantMenu()
-    {
-        Ray ray = _cameraRay.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-        if (Physics.Raycast(ray,out hit))
-        {
-            if (hit.collider.gameObject.tag == "Field")
-            {
-                _aimField = true;
-                _objectGetByRay = hit.collider.gameObject;
-            }
-            else
-            {
-                _aimField = false;
-            }
-        }
-        
-        plantMenu.SetActive(_isOpened);
-        if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _aimField)
-        {
-            _isOpened = !_isOpened;
-            
-            //Show Mouse Cursor or not
-            _showCursor = !_showCursor;
-            MouseController.ShowMouse(_showCursor);
-        }
-    }
+    
 }
