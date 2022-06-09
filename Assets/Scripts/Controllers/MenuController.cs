@@ -27,7 +27,9 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Button button1;
     [SerializeField] private Button button2;
     [SerializeField] private Button button3;
+    [SerializeField] private Button closeButton;
 
+    public  bool _hasPlanted;
     private bool _isOpened;
     private bool _showCursor;
     private bool _canOpenPlantMenu;
@@ -48,6 +50,9 @@ public class MenuController : MonoBehaviour
     private void MonitorButtons()
     {
         button1.onClick.AddListener(PlantCorn);
+        button2.onClick.AddListener(PlantWaterMelon);
+        button3.onClick.AddListener(PlantCabbage);
+        closeButton.onClick.AddListener(ClosePlantMenu);
     }
     
     
@@ -55,28 +60,30 @@ public class MenuController : MonoBehaviour
     {
         _cornStart.SetActive(true);
         _isOpened = false;
-        _showCursor = !_showCursor;
-        MouseController.ShowMouse(_showCursor);
-        
+        ClosePlantMenu();
+        _hasPlanted = true;
     }
 
     public void PlantWaterMelon()
     {
         _waterMelonStart.SetActive(true);
         _isOpened = false;
+        ClosePlantMenu();
+        _hasPlanted = true;
     }
     
     public void PlantCabbage()
     {
         _cabbageStart.SetActive(true);
         _isOpened = false;
+        ClosePlantMenu();
+        _hasPlanted = true;
     }
-
-   
+    
     private void OpenPlantMenu()
     {
         plantMenu.SetActive(_isOpened);
-        if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu)
+        if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _hasPlanted == false)
         {
             _isOpened = !_isOpened;
             _showCursor = !_showCursor;
@@ -87,6 +94,8 @@ public class MenuController : MonoBehaviour
     private void ClosePlantMenu()
     {
         _isOpened = false;
+        _showCursor = false;
+        MouseController.ShowMouse(_showCursor);
     }
     
     
