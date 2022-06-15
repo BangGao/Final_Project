@@ -6,10 +6,8 @@ using UnityEditor;
 using UnityEditor.ShaderGraph.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 
-public delegate void ofOne();
 public delegate void buttonDelegate();
 
 public class SceneController : SingleTon<SceneController>
@@ -17,46 +15,43 @@ public class SceneController : SingleTon<SceneController>
     public Button startBtn;
     public Button exitBtn;
     public Animator animator;
-    public buttonDelegate btnDelegate;
-    
-    //Try delegate and Coroutine
     
     protected override void Awake()
     {
         base.Awake();
-        //Test1(Test2);
-    }
-
-    private void Start()
-    {
-        GameObject.DontDestroyOnLoad(this.gameObject);
     }
     
-    public void OpenMainGameScene(EditorApplication.CallbackFunction callback)
+    private void Start()
+    {
+        GameObject.DontDestroyOnLoad(this);
+        startBtn.onClick.AddListener(EnterMainGame);
+        exitBtn.onClick.AddListener(ExitGame);
+    }
+    
+    private void EnterMainGame()
+    {
+        StartCoroutine(LoadLevel());
+    }
+    
+    IEnumerator LoadLevel()
     {
         animator.SetBool("FadeIN",true);
-    }
-
-    private void ChangeToGameScene()
-    {
-        MouseController.ShowMouse(false);
-        SceneManager.LoadScene("MainGame");
+        animator.SetBool("FadeOUT",false);
+        //Delay one second
+        yield return new WaitForSeconds(1.0f);
+        
+        AsyncOperation operation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        operation.allowSceneActivation = false;
+        while (!operation.isDone)
+        {
+            MouseController.ShowMouse(false);
+            operation.allowSceneActivation = true;
+            yield return null;
+        }
     }
 
     public void ExitGame()
     {
         Application.Quit();
     }
-
-
-    // private void Test1(EditorApplication.CallbackFunction callback)
-    // {
-    //     Debug.Log("1");
-    //     callback();
-    // }
-    //
-    // private void Test2()
-    // {
-    //     Debug.Log("2");
-    // }
 }
