@@ -40,7 +40,6 @@ public class MenuController : MonoBehaviour
         _canvasGroup = plantMenu.GetComponent<CanvasGroup>();
     }
     
-    
     void Update()
     {
         OpenPlantMenu();
@@ -54,8 +53,7 @@ public class MenuController : MonoBehaviour
         button3.onClick.AddListener(PlantCabbage);
         closeButton.onClick.AddListener(ClosePlantMenu);
     }
-    
-    
+
     public void PlantCorn()
     {
         _cornStart.SetActive(true);

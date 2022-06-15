@@ -3,10 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class MouseController
+public class MouseController : SingleTon<MouseController>
 {
     public static bool CameraDisable;
-    
+
+    protected override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(this);
+    }
+
     //Control the mouse to be Visible or Invisible
     public static void ShowMouse(bool showMouse)
     {
