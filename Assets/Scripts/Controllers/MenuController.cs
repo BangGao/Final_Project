@@ -12,6 +12,9 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
+    public GameObject goDayNightController;
+    private DayNightController _dayNightController;
+
     [Header("Event List")] public UnityEvent Event;
 
     [Header("Plants")] 
@@ -29,6 +32,10 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Button button3;
     [SerializeField] private Button closeButton;
 
+    [Header("PlantInformation")] 
+    [SerializeField] private int plantDate;
+    [SerializeField] private string CurrentPlant;
+    
     public  bool _hasPlanted;
     private bool _isOpened;
     private bool _showCursor;
@@ -38,6 +45,7 @@ public class MenuController : MonoBehaviour
     void Start()
     {
         _canvasGroup = plantMenu.GetComponent<CanvasGroup>();
+        _dayNightController = goDayNightController.GetComponent<DayNightController>();
     }
     
     void Update()
@@ -60,6 +68,8 @@ public class MenuController : MonoBehaviour
         _isOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
+        CurrentPlant = "Corn";
+        plantDate = _dayNightController.currentDay;
     }
 
     public void PlantWaterMelon()
@@ -68,6 +78,8 @@ public class MenuController : MonoBehaviour
         _isOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
+        CurrentPlant = "WaterMelon";
+        plantDate = _dayNightController.currentDay;
     }
     
     public void PlantCabbage()
@@ -76,6 +88,8 @@ public class MenuController : MonoBehaviour
         _isOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
+        CurrentPlant = "Cabbage";
+        plantDate = _dayNightController.currentDay;
     }
     
     private void OpenPlantMenu()
