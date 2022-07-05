@@ -1,19 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.UI;
 
 public class DayNightController : MonoBehaviour
 {
     [Range(0, 24)] public float timeofDay;
+    public Text timeText;
+    public Text dateText;
+    private string _textShow;
+    
     public float orbitSpeed = 1.0f;
     public Light sun;
     public Light moon;
     public Volume skyVolume;
     public AnimationCurve starsCurve;
-    
+
+    [Header("CubeMaps")] 
+    public CubemapParameter dayMap;
+    public CubemapParameter nightMap;
+
+    public int currentDay;
     
     private PhysicallyBasedSky _sky;
     private bool _isNight;
@@ -29,8 +40,11 @@ public class DayNightController : MonoBehaviour
         if (timeofDay > 24)
         {
             timeofDay = 0;
+            currentDay++;
         }
         
+        dateText.text = currentDay.ToString();
+        timeText.text = timeofDay.ToString("F2");
         UpdateTime();
     }
 
@@ -76,6 +90,7 @@ public class DayNightController : MonoBehaviour
         _isNight = false;
         sun.shadows = LightShadows.Soft;
         moon.shadows = LightShadows.None;
+        _sky.spaceEmissionTexture = dayMap;
     }
 
     private void StartNight()
@@ -83,5 +98,6 @@ public class DayNightController : MonoBehaviour
         _isNight = true;
         sun.shadows = LightShadows.None;
         moon.shadows = LightShadows.Soft;
+        _sky.spaceEmissionTexture = nightMap;
     }
 }
