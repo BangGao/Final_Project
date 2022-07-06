@@ -12,6 +12,10 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
+    public delegate void PickPlant();
+
+    private PickPlant _pickPlant;
+    
     public GameObject goDayNightController;
     private DayNightController _dayNightController;
 
@@ -19,8 +23,14 @@ public class MenuController : MonoBehaviour
 
     [Header("Plants")] 
     [SerializeField] private GameObject _cornStart;
+    [SerializeField] private GameObject _cornMiddle;
+    [SerializeField] private GameObject _cornFinal;
     [SerializeField] private GameObject _waterMelonStart;
+    [SerializeField] private GameObject _waterMelonMiddle;
+    [SerializeField] private GameObject _waterMelonFinal;
     [SerializeField] private GameObject _cabbageStart;
+    [SerializeField] private GameObject _cabbageMiddle;
+    [SerializeField] private GameObject _cabbageFinal;
     
     [Header("Menus")]
     public GameObject plantMenu;
@@ -40,7 +50,7 @@ public class MenuController : MonoBehaviour
     private bool _isOpened;
     private bool _showCursor;
     private bool _canOpenPlantMenu;
-
+    private int plantTime;
 
     void Start()
     {
@@ -52,16 +62,39 @@ public class MenuController : MonoBehaviour
     {
         OpenPlantMenu();
         MonitorButtons();
+        PlantGrowProcess(CurrentPlant);
     }
-
+    
     private void MonitorButtons()
     {
-        button1.onClick.AddListener(PlantCorn);
+        button1.onClick.AddListener(PlantCabbage);
         button2.onClick.AddListener(PlantWaterMelon);
-        button3.onClick.AddListener(PlantCabbage);
+        button3.onClick.AddListener(PlantCorn);
         closeButton.onClick.AddListener(ClosePlantMenu);
     }
 
+    //Plant
+    private void PlantGrowProcess(string currentPlant)
+    {
+        if (currentPlant == "Corn")
+        {
+            _pickPlant += CornGrow;
+            _pickPlant.Invoke();
+        }
+        else if (currentPlant == "WaterMelon")
+        {
+            _pickPlant += WaterMelonGrow;
+            _pickPlant.Invoke();
+        }
+        else if (currentPlant == "Cabbage")
+        {
+            _pickPlant += CabbageGrow;
+            _pickPlant.Invoke();
+        }
+        
+    }
+    
+    //Corn Part
     public void PlantCorn()
     {
         _cornStart.SetActive(true);
@@ -72,6 +105,22 @@ public class MenuController : MonoBehaviour
         plantDate = _dayNightController.currentDay;
     }
 
+    private void CornGrow()
+    {
+        plantTime = _dayNightController.currentDay - plantDate;
+        if (plantTime == 2)
+        {
+            _cornStart.SetActive(false);
+            _cornMiddle.SetActive(true);
+        }
+        else if (plantTime == 4)
+        {
+            _cornMiddle.SetActive(false);
+            _cornFinal.SetActive(true);
+        }
+    }
+    
+    //WaterMelon Part
     public void PlantWaterMelon()
     {
         _waterMelonStart.SetActive(true);
@@ -82,6 +131,22 @@ public class MenuController : MonoBehaviour
         plantDate = _dayNightController.currentDay;
     }
     
+    private void WaterMelonGrow()
+    {
+        plantTime = _dayNightController.currentDay - plantDate;
+        if (plantTime == 2)
+        {
+            _waterMelonStart.SetActive(false);
+            _waterMelonMiddle.SetActive(true);
+        }
+        else if (plantTime == 4)
+        {
+            _waterMelonMiddle.SetActive(false);
+            _waterMelonFinal.SetActive(true);
+        }
+    }
+    
+    //Cabbage Plant
     public void PlantCabbage()
     {
         _cabbageStart.SetActive(true);
@@ -92,6 +157,23 @@ public class MenuController : MonoBehaviour
         plantDate = _dayNightController.currentDay;
     }
     
+    private void CabbageGrow()
+    {
+        plantTime = _dayNightController.currentDay - plantDate;
+        if (plantTime == 2)
+        {
+            _cabbageStart.SetActive(false);
+            _cabbageMiddle.SetActive(true);
+        }
+        else if (plantTime == 4)
+        {
+            _cabbageMiddle.SetActive(false);
+            _cabbageFinal.SetActive(true);
+        }
+    }
+
+    
+    //PlantMenu Part
     private void OpenPlantMenu()
     {
         plantMenu.SetActive(_isOpened);
