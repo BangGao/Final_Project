@@ -1,4 +1,6 @@
 ﻿using System;
+using Cinemachine;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using Random = UnityEngine.Random;
@@ -116,6 +118,9 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+        [Header("Help UI Part")] public GameObject HelpUI;
+        [SerializeField] private bool IsHelpOpened;
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -166,6 +171,8 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            
+            OpenCloseHelpInformation();
         }
 
         private void LateUpdate()
@@ -395,6 +402,15 @@ namespace StarterAssets
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+            }
+        }
+
+        private void OpenCloseHelpInformation()
+        {
+            if (Keyboard.current.qKey.wasPressedThisFrame)
+            {
+                IsHelpOpened = !IsHelpOpened;
+                HelpUI.SetActive(IsHelpOpened);
             }
         }
     }
