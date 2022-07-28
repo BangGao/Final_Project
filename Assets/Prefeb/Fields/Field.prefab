@@ -8549,6 +8549,7 @@ MonoBehaviour:
   _cabbageMiddle: {fileID: 9183597000581200574}
   _cabbageFinal: {fileID: 5891448137004301333}
   plantMenu: {fileID: 2412321954942835210}
+  FertizerMenu: {fileID: 0}
   button1: {fileID: 2412321954976544530}
   button2: {fileID: 2412321954471822742}
   button3: {fileID: 2412321954523337601}

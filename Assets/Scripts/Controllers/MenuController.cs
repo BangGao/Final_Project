@@ -9,7 +9,6 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
 public class MenuController : MonoBehaviour
 {
     public delegate void PickPlant();
@@ -34,33 +33,44 @@ public class MenuController : MonoBehaviour
     
     [Header("Menus")]
     public GameObject plantMenu;
-    private CanvasGroup _canvasGroup;
-    
-    [Header("Buttons")]
+    public GameObject fertizerMenu;
+    public GameObject haverstMenu;
+
+    [Header("Buttons in Plant Menu")]
     [SerializeField] private Button button1;
     [SerializeField] private Button button2;
     [SerializeField] private Button button3;
     [SerializeField] private Button closeButton;
 
-    [Header("PlantInformation")] 
+    [Header("Buttons in Haverst Menu")]
+    [SerializeField] private Button buttonYes;
+    [SerializeField] private Button buttonNo;
+    
+    [Header("PlantInformation")]
     [SerializeField] private int plantDate;
     [SerializeField] private string CurrentPlant;
+    public GameObject CurrentPlant_GO;
     
     public  bool _hasPlanted;
-    private bool _isOpened;
+    public  bool _canbeHarvest;
+    private bool _pMisOpened;
+    private bool _hMisOpened;
     private bool _showCursor;
     private bool _canOpenPlantMenu;
+    private bool _canOpenHarvestMenu;
     private int plantTime;
+
+    private FieldStatus _fieldStatus;
 
     void Start()
     {
-        _canvasGroup = plantMenu.GetComponent<CanvasGroup>();
         _dayNightController = goDayNightController.GetComponent<DayNightController>();
     }
     
     void Update()
     {
         OpenPlantMenu();
+        OpenHaverstMenu();
         MonitorButtons();
         PlantGrowProcess(CurrentPlant);
     }
@@ -91,14 +101,13 @@ public class MenuController : MonoBehaviour
             _pickPlant += CabbageGrow;
             _pickPlant.Invoke();
         }
-        
     }
     
     //Corn Part
     public void PlantCorn()
     {
         _cornStart.SetActive(true);
-        _isOpened = false;
+        _pMisOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
         CurrentPlant = "Corn";
@@ -117,6 +126,8 @@ public class MenuController : MonoBehaviour
         {
             _cornMiddle.SetActive(false);
             _cornFinal.SetActive(true);
+            CurrentPlant_GO = _cornFinal;
+            _canbeHarvest = true;
         }
     }
     
@@ -124,7 +135,7 @@ public class MenuController : MonoBehaviour
     public void PlantWaterMelon()
     {
         _waterMelonStart.SetActive(true);
-        _isOpened = false;
+        _pMisOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
         CurrentPlant = "WaterMelon";
@@ -143,6 +154,8 @@ public class MenuController : MonoBehaviour
         {
             _waterMelonMiddle.SetActive(false);
             _waterMelonFinal.SetActive(true);
+            CurrentPlant_GO = _waterMelonFinal;
+            _canbeHarvest = true;
         }
     }
     
@@ -150,7 +163,7 @@ public class MenuController : MonoBehaviour
     public void PlantCabbage()
     {
         _cabbageStart.SetActive(true);
-        _isOpened = false;
+        _pMisOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
         CurrentPlant = "Cabbage";
@@ -169,6 +182,8 @@ public class MenuController : MonoBehaviour
         {
             _cabbageMiddle.SetActive(false);
             _cabbageFinal.SetActive(true);
+            CurrentPlant_GO = _cabbageFinal;
+            _canbeHarvest = true;
         }
     }
 
@@ -176,10 +191,10 @@ public class MenuController : MonoBehaviour
     //PlantMenu Part
     private void OpenPlantMenu()
     {
-        plantMenu.SetActive(_isOpened);
+        plantMenu.SetActive(_pMisOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _hasPlanted == false)
         {
-            _isOpened = !_isOpened;
+            _pMisOpened = !_pMisOpened;
             _showCursor = !_showCursor;
             MouseController.ShowMouse(_showCursor);
         }
@@ -187,9 +202,30 @@ public class MenuController : MonoBehaviour
 
     private void ClosePlantMenu()
     {
-        _isOpened = false;
+        _pMisOpened = false;
         _showCursor = false;
         MouseController.ShowMouse(_showCursor);
+    }
+    
+    //Harvest Menu
+    private void OpenHaverstMenu()
+    {
+        haverstMenu.SetActive(_hMisOpened);
+        if (Keyboard.current.eKey.wasPressedThisFrame &&_canOpenHarvestMenu && _canbeHarvest)
+        {
+            Debug.Log('1');
+            _hMisOpened = !_hMisOpened;
+            _showCursor = !_showCursor;
+            MouseController.ShowMouse(_showCursor);
+            buttonYes.onClick.AddListener(HaverstPlant);
+        }
+    }
+
+    private void HaverstPlant()
+    {
+        CurrentPlant_GO.SetActive(false);
+        _hasPlanted = false;
+        _canbeHarvest = false;
     }
     
     
@@ -198,12 +234,14 @@ public class MenuController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _canOpenPlantMenu = true;
+            _canOpenHarvestMenu = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         _canOpenPlantMenu = false;
+        _canOpenHarvestMenu = false;
     }
     
 }
