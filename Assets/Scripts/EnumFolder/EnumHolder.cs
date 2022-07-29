@@ -3,3 +3,5 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum FieldStatus{PerfectStatus,LosingStatus,DesertStatus};
+
+public enum PlantType{Cabbage,Corn,WaterMelon};

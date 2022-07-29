@@ -61,6 +61,7 @@ public class MenuController : MonoBehaviour
     private int plantTime;
 
     private FieldStatus _fieldStatus;
+    private PlantType _plantType;
 
     void Start()
     {
@@ -111,6 +112,7 @@ public class MenuController : MonoBehaviour
         ClosePlantMenu();
         _hasPlanted = true;
         CurrentPlant = "Corn";
+        _plantType = PlantType.Corn;
         plantDate = _dayNightController.currentDay;
     }
 
@@ -213,7 +215,6 @@ public class MenuController : MonoBehaviour
         haverstMenu.SetActive(_hMisOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame &&_canOpenHarvestMenu && _canbeHarvest)
         {
-            Debug.Log('1');
             _hMisOpened = !_hMisOpened;
             _showCursor = !_showCursor;
             MouseController.ShowMouse(_showCursor);
@@ -221,11 +222,17 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    private void HaverstPlant()
+    public void HaverstPlant()
     {
-        CurrentPlant_GO.SetActive(false);
+        Debug.Log('1');
+        _hMisOpened = false;
         _hasPlanted = false;
         _canbeHarvest = false;
+        _showCursor = false;
+        
+        MouseController.ShowMouse(_showCursor);
+        CurrentPlant_GO.SetActive(false);
+       
     }
     
     
