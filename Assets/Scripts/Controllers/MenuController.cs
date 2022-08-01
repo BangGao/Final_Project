@@ -49,8 +49,7 @@ public class MenuController : MonoBehaviour
     [Header("PlantInformation")]
     [SerializeField] private int plantDate;
     [SerializeField] private string CurrentPlant;
-    public GameObject CurrentPlant_GO;
-    
+
     public  bool _hasPlanted;
     public  bool _canbeHarvest;
     private bool _pMisOpened;
@@ -112,7 +111,6 @@ public class MenuController : MonoBehaviour
         ClosePlantMenu();
         _hasPlanted = true;
         CurrentPlant = "Corn";
-        _plantType = PlantType.Corn;
         plantDate = _dayNightController.currentDay;
     }
 
@@ -128,7 +126,10 @@ public class MenuController : MonoBehaviour
         {
             _cornMiddle.SetActive(false);
             _cornFinal.SetActive(true);
-            CurrentPlant_GO = _cornFinal;
+            _canbeHarvest = true;
+        }
+        else if(plantTime>4)
+        {
             _canbeHarvest = true;
         }
     }
@@ -156,7 +157,10 @@ public class MenuController : MonoBehaviour
         {
             _waterMelonMiddle.SetActive(false);
             _waterMelonFinal.SetActive(true);
-            CurrentPlant_GO = _waterMelonFinal;
+            _canbeHarvest = true;
+        }
+        else if(plantTime>4)
+        {
             _canbeHarvest = true;
         }
     }
@@ -184,7 +188,10 @@ public class MenuController : MonoBehaviour
         {
             _cabbageMiddle.SetActive(false);
             _cabbageFinal.SetActive(true);
-            CurrentPlant_GO = _cabbageFinal;
+            _canbeHarvest = true;
+        }
+        else if(plantTime>4)
+        {
             _canbeHarvest = true;
         }
     }
@@ -218,21 +225,26 @@ public class MenuController : MonoBehaviour
             _hMisOpened = !_hMisOpened;
             _showCursor = !_showCursor;
             MouseController.ShowMouse(_showCursor);
-            buttonYes.onClick.AddListener(HaverstPlant);
         }
     }
 
     public void HaverstPlant()
     {
-        Debug.Log('1');
+        
         _hMisOpened = false;
         _hasPlanted = false;
         _canbeHarvest = false;
         _showCursor = false;
-        
         MouseController.ShowMouse(_showCursor);
-        CurrentPlant_GO.SetActive(false);
-       
+      
+        _cornFinal.SetActive(false);
+        _cabbageFinal.SetActive(false);
+        _waterMelonFinal.SetActive(false);
+
+        CurrentPlant = "";
+        _canOpenHarvestMenu = false;
+        // plantDate = 0;
+        // plantTime = 0;
     }
     
     
