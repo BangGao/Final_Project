@@ -35,7 +35,8 @@ public class MenuController : MonoBehaviour
     public GameObject plantMenu;
     public GameObject fertizerMenu;
     public GameObject haverstMenu;
-
+    public GameObject warningCanvas;
+    
     [Header("Buttons in Plant Menu")]
     [SerializeField] private Button button1;
     [SerializeField] private Button button2;
@@ -61,7 +62,9 @@ public class MenuController : MonoBehaviour
 
     private FieldStatus _fieldStatus;
     private PlantType _plantType;
-
+    
+    public int _fieldExhaustTime = 0;
+    
     void Start()
     {
         _dayNightController = goDayNightController.GetComponent<DayNightController>();
@@ -243,8 +246,7 @@ public class MenuController : MonoBehaviour
 
         CurrentPlant = "";
         _canOpenHarvestMenu = false;
-        // plantDate = 0;
-        // plantTime = 0;
+        _fieldExhaustTime++;
     }
     
     
@@ -252,6 +254,20 @@ public class MenuController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            // //暂时规定不为0的时候土地即疲劳状态
+            // if (_fieldExhaustTime != 0)
+            // {
+            //     warningCanvas.SetActive(true);
+            //     Debug.Log("1");
+            // }
+            // else
+            // {
+            //     warningCanvas.SetActive(false);
+            // }
+            if (_fieldExhaustTime != 0)
+            {
+                warningCanvas.SetActive(true);
+            }
             _canOpenPlantMenu = true;
             _canOpenHarvestMenu = true;
         }
@@ -259,6 +275,7 @@ public class MenuController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        warningCanvas.SetActive(false);
         _canOpenPlantMenu = false;
         _canOpenHarvestMenu = false;
     }
