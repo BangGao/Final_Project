@@ -34,6 +34,7 @@ public class MenuController : MonoBehaviour
     [Header("Menus")]
     public GameObject plantMenu;
     public GameObject fertizerMenu;
+    public GameObject blockWindow;
     public GameObject haverstMenu;
     public GameObject warningCanvas;
     
@@ -63,7 +64,9 @@ public class MenuController : MonoBehaviour
     private FieldStatus _fieldStatus;
     private PlantType _plantType;
     
-    public int _fieldExhaustTime = 0;
+    public float _fieldExhaustTime = 0;
+    public float timer = 5.0f;
+    
     
     void Start()
     {
@@ -72,6 +75,8 @@ public class MenuController : MonoBehaviour
     
     void Update()
     {
+       
+        
         OpenPlantMenu();
         OpenHaverstMenu();
         MonitorButtons();
@@ -120,12 +125,12 @@ public class MenuController : MonoBehaviour
     private void CornGrow()
     {
         plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2)
+        if (plantTime == 2 && CurrentPlant == "Corn")
         {
             _cornStart.SetActive(false);
             _cornMiddle.SetActive(true);
         }
-        else if (plantTime == 4)
+        else if (plantTime == 4 && CurrentPlant == "Corn")
         {
             _cornMiddle.SetActive(false);
             _cornFinal.SetActive(true);
@@ -151,12 +156,12 @@ public class MenuController : MonoBehaviour
     private void WaterMelonGrow()
     {
         plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2)
+        if (plantTime == 2 && CurrentPlant == "WaterMelon")
         {
             _waterMelonStart.SetActive(false);
             _waterMelonMiddle.SetActive(true);
         }
-        else if (plantTime == 4)
+        else if (plantTime == 4 && CurrentPlant == "WaterMelon")
         {
             _waterMelonMiddle.SetActive(false);
             _waterMelonFinal.SetActive(true);
@@ -182,12 +187,12 @@ public class MenuController : MonoBehaviour
     private void CabbageGrow()
     {
         plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2)
+        if (plantTime == 2 && CurrentPlant == "Cabbage")
         {
             _cabbageStart.SetActive(false);
             _cabbageMiddle.SetActive(true);
         }
-        else if (plantTime == 4)
+        else if (plantTime == 4 && CurrentPlant == "Cabbage")
         {
             _cabbageMiddle.SetActive(false);
             _cabbageFinal.SetActive(true);
@@ -206,10 +211,27 @@ public class MenuController : MonoBehaviour
         plantMenu.SetActive(_pMisOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _hasPlanted == false)
         {
-            _pMisOpened = !_pMisOpened;
-            _showCursor = !_showCursor;
-            MouseController.ShowMouse(_showCursor);
+            if (_fieldExhaustTime >= 2)
+            {
+                blockWindow.SetActive(true);
+                _showCursor = !_showCursor;
+                MouseController.ShowMouse(_showCursor);
+            }
+            else
+            {
+                _pMisOpened = !_pMisOpened;
+                _showCursor = !_showCursor;
+                MouseController.ShowMouse(_showCursor);
+            }
         }
+    }
+
+    public void CloseBlockWindow()
+    {
+        _fieldExhaustTime = 0;
+        blockWindow.SetActive(false);
+        _showCursor = false;
+        MouseController.ShowMouse(_showCursor);
     }
 
     private void ClosePlantMenu()
@@ -254,16 +276,7 @@ public class MenuController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // //暂时规定不为0的时候土地即疲劳状态
-            // if (_fieldExhaustTime != 0)
-            // {
-            //     warningCanvas.SetActive(true);
-            //     Debug.Log("1");
-            // }
-            // else
-            // {
-            //     warningCanvas.SetActive(false);
-            // }
+            
             if (_fieldExhaustTime != 0)
             {
                 warningCanvas.SetActive(true);
