@@ -11095,6 +11095,7 @@ MonoBehaviour:
   buttonNo: {fileID: 2810801742704219656}
   plantDate: 0
   currentPlant: 
+  lastPlant: 
   fieldExhaustTime: 0
   havestType: 
 --- !u!114 &150364582588783297

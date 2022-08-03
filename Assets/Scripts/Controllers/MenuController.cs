@@ -49,13 +49,19 @@ public class MenuController : MonoBehaviour
     [Header("PlantInformation")]
     [SerializeField] private int plantDate;
     [HideInInspector] public string currentPlant;
+    [HideInInspector] public string lastPlant;
 
     
         
-    public float fieldExhaustTime = 0;
+    public float fieldExhaustTime = 0.0f;
     
     [HideInInspector]
     public string havestType;
+    
+    //HarvestPart
+    private int normalProductionNum = 5;
+    private int lowProductionNum = 0;
+    
     
     private  bool _hasPlanted;
     private  bool _canbeHarvest;
@@ -253,13 +259,13 @@ public class MenuController : MonoBehaviour
 
     public void HaverstPlant()
     {
-        
         _hMisOpened = false;
         _hasPlanted = false;
         _canbeHarvest = false;
         _showCursor = false;
         MouseController.ShowMouse(_showCursor);
-
+        
+        lastPlant = currentPlant;
         switch (currentPlant)
         {
             case "Corn":

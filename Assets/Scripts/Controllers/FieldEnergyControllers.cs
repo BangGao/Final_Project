@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,40 +36,40 @@ public class FieldEnergyControllers : MonoBehaviour
     }
     else
     {
-      Debug.Log("1");
       textInStatus.text = "CURRENT PLANT:";
     }
   }
 
-  private void changeSlider()
+  public void ChangeSlider()
   {
-    
-  }
-  
-  
-  private void EnergyCalculator()
-  {
-    if (menucController.havestType == "")
+    if (menucController.lastPlant == menucController.currentPlant)
     {
-      return;
+      fieldStatusSlider.value -= 0.5f;
     }
     else
     {
-      if (menucController.havestType == "Corn")
+      fieldStatusSlider.value -= 0.2f;
+    }
+    
+  }
+  
+  private void EnergyCalculator()
+  {
+    if (menucController.havestType != "")
+    {
+      switch (menucController.havestType)
       {
-        _currentPlantTimesCorn++;
-      }
-      else if(menucController.havestType == "Cabbage")
-      {
-        _currentPlantTimesCabbage++;
-      }
-      else if(menucController.havestType == "WaterMelon")
-      { 
-        _currentPlantTimesWaterMelon++;
+        case "Corn":
+          _currentPlantTimesCorn++;
+          break;
+        case "Cabbage":
+          _currentPlantTimesCabbage++;
+          break;
+        case "WaterMelon":
+          _currentPlantTimesWaterMelon++;
+          break;
       }
     }
   }
   
-  
-
 }
