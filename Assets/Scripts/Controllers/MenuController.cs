@@ -12,30 +12,28 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     public delegate void PickPlant();
-
-    private PickPlant _pickPlant;
-    
     public GameObject goDayNightController;
+    
+    private PickPlant _pickPlant;
     private DayNightController _dayNightController;
-
-    [Header("Event List")] public UnityEvent Event;
-
+    
     [Header("Plants")] 
-    [SerializeField] private GameObject _cornStart;
-    [SerializeField] private GameObject _cornMiddle;
-    [SerializeField] private GameObject _cornFinal;
-    [SerializeField] private GameObject _waterMelonStart;
-    [SerializeField] private GameObject _waterMelonMiddle;
-    [SerializeField] private GameObject _waterMelonFinal;
-    [SerializeField] private GameObject _cabbageStart;
-    [SerializeField] private GameObject _cabbageMiddle;
-    [SerializeField] private GameObject _cabbageFinal;
+    [SerializeField] private GameObject cornStart;
+    [SerializeField] private GameObject cornMiddle;
+    [SerializeField] private GameObject cornFinal;
+    [SerializeField] private GameObject waterMelonStart;
+    [SerializeField] private GameObject waterMelonMiddle;
+    [SerializeField] private GameObject waterMelonFinal;
+    [SerializeField] private GameObject cabbageStart;
+    [SerializeField] private GameObject cabbageMiddle;
+    [SerializeField] private GameObject cabbageFinal;
     
     [Header("Menus")]
     public GameObject plantMenu;
     public GameObject fertizerMenu;
     public GameObject blockWindow;
     public GameObject haverstMenu;
+    public GameObject statusWindow;
     public GameObject warningCanvas;
     
     [Header("Buttons in Plant Menu")]
@@ -50,23 +48,25 @@ public class MenuController : MonoBehaviour
     
     [Header("PlantInformation")]
     [SerializeField] private int plantDate;
-    [SerializeField] private string CurrentPlant;
+    [HideInInspector] public string currentPlant;
 
-    public  bool _hasPlanted;
-    public  bool _canbeHarvest;
+    
+        
+    public float fieldExhaustTime = 0;
+    
+    [HideInInspector]
+    public string havestType;
+    
+    private  bool _hasPlanted;
+    private  bool _canbeHarvest;
     private bool _pMisOpened;
     private bool _hMisOpened;
     private bool _showCursor;
     private bool _canOpenPlantMenu;
     private bool _canOpenHarvestMenu;
     private int plantTime;
-
-    private FieldStatus _fieldStatus;
+    
     private PlantType _plantType;
-    
-    public float _fieldExhaustTime = 0;
-    public float timer = 5.0f;
-    
     
     void Start()
     {
@@ -75,12 +75,10 @@ public class MenuController : MonoBehaviour
     
     void Update()
     {
-       
-        
         OpenPlantMenu();
         OpenHaverstMenu();
         MonitorButtons();
-        PlantGrowProcess(CurrentPlant);
+        PlantGrowProcess(currentPlant);
     }
     
     private void MonitorButtons()
@@ -92,19 +90,19 @@ public class MenuController : MonoBehaviour
     }
 
     //Plant
-    private void PlantGrowProcess(string currentPlant)
+    private void PlantGrowProcess(string _currentPlant)
     {
-        if (currentPlant == "Corn")
+        if (_currentPlant == "Corn")
         {
             _pickPlant += CornGrow;
             _pickPlant.Invoke();
         }
-        else if (currentPlant == "WaterMelon")
+        else if (_currentPlant == "WaterMelon")
         {
             _pickPlant += WaterMelonGrow;
             _pickPlant.Invoke();
         }
-        else if (currentPlant == "Cabbage")
+        else if (_currentPlant == "Cabbage")
         {
             _pickPlant += CabbageGrow;
             _pickPlant.Invoke();
@@ -114,26 +112,26 @@ public class MenuController : MonoBehaviour
     //Corn Part
     public void PlantCorn()
     {
-        _cornStart.SetActive(true);
+        cornStart.SetActive(true);
         _pMisOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
-        CurrentPlant = "Corn";
+        currentPlant = "Corn";
         plantDate = _dayNightController.currentDay;
     }
 
     private void CornGrow()
     {
         plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2 && CurrentPlant == "Corn")
+        if (plantTime == 2 && currentPlant == "Corn")
         {
-            _cornStart.SetActive(false);
-            _cornMiddle.SetActive(true);
+            cornStart.SetActive(false);
+            cornMiddle.SetActive(true);
         }
-        else if (plantTime == 4 && CurrentPlant == "Corn")
+        else if (plantTime == 4 && currentPlant == "Corn")
         {
-            _cornMiddle.SetActive(false);
-            _cornFinal.SetActive(true);
+            cornMiddle.SetActive(false);
+            cornFinal.SetActive(true);
             _canbeHarvest = true;
         }
         else if(plantTime>4)
@@ -145,26 +143,26 @@ public class MenuController : MonoBehaviour
     //WaterMelon Part
     public void PlantWaterMelon()
     {
-        _waterMelonStart.SetActive(true);
+        waterMelonStart.SetActive(true);
         _pMisOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
-        CurrentPlant = "WaterMelon";
+        currentPlant = "WaterMelon";
         plantDate = _dayNightController.currentDay;
     }
     
     private void WaterMelonGrow()
     {
         plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2 && CurrentPlant == "WaterMelon")
+        if (plantTime == 2 && currentPlant == "WaterMelon")
         {
-            _waterMelonStart.SetActive(false);
-            _waterMelonMiddle.SetActive(true);
+            waterMelonStart.SetActive(false);
+            waterMelonMiddle.SetActive(true);
         }
-        else if (plantTime == 4 && CurrentPlant == "WaterMelon")
+        else if (plantTime == 4 && currentPlant == "WaterMelon")
         {
-            _waterMelonMiddle.SetActive(false);
-            _waterMelonFinal.SetActive(true);
+            waterMelonMiddle.SetActive(false);
+            waterMelonFinal.SetActive(true);
             _canbeHarvest = true;
         }
         else if(plantTime>4)
@@ -176,26 +174,26 @@ public class MenuController : MonoBehaviour
     //Cabbage Plant
     public void PlantCabbage()
     {
-        _cabbageStart.SetActive(true);
+        cabbageStart.SetActive(true);
         _pMisOpened = false;
         ClosePlantMenu();
         _hasPlanted = true;
-        CurrentPlant = "Cabbage";
+        currentPlant = "Cabbage";
         plantDate = _dayNightController.currentDay;
     }
     
     private void CabbageGrow()
     {
         plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2 && CurrentPlant == "Cabbage")
+        if (plantTime == 2 && currentPlant == "Cabbage")
         {
-            _cabbageStart.SetActive(false);
-            _cabbageMiddle.SetActive(true);
+            cabbageStart.SetActive(false);
+            cabbageMiddle.SetActive(true);
         }
-        else if (plantTime == 4 && CurrentPlant == "Cabbage")
+        else if (plantTime == 4 && currentPlant == "Cabbage")
         {
-            _cabbageMiddle.SetActive(false);
-            _cabbageFinal.SetActive(true);
+            cabbageMiddle.SetActive(false);
+            cabbageFinal.SetActive(true);
             _canbeHarvest = true;
         }
         else if(plantTime>4)
@@ -211,7 +209,7 @@ public class MenuController : MonoBehaviour
         plantMenu.SetActive(_pMisOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _hasPlanted == false)
         {
-            if (_fieldExhaustTime >= 2)
+            if (fieldExhaustTime >= 2)
             {
                 blockWindow.SetActive(true);
                 _showCursor = !_showCursor;
@@ -228,7 +226,7 @@ public class MenuController : MonoBehaviour
 
     public void CloseBlockWindow()
     {
-        _fieldExhaustTime = 0;
+        fieldExhaustTime = 0;
         blockWindow.SetActive(false);
         _showCursor = false;
         MouseController.ShowMouse(_showCursor);
@@ -261,14 +259,25 @@ public class MenuController : MonoBehaviour
         _canbeHarvest = false;
         _showCursor = false;
         MouseController.ShowMouse(_showCursor);
-      
-        _cornFinal.SetActive(false);
-        _cabbageFinal.SetActive(false);
-        _waterMelonFinal.SetActive(false);
 
-        CurrentPlant = "";
+        switch (currentPlant)
+        {
+            case "Corn":
+                cornFinal.SetActive(false);
+                havestType = "Corn";
+                break;
+            case "WaterMelon":
+                waterMelonFinal.SetActive(false);
+                havestType = "WaterMelon";
+                break;
+            case "Cabbage":
+                cabbageFinal.SetActive(false);
+                havestType = "WaterMelon";
+                break;
+        }
+        currentPlant = "";
         _canOpenHarvestMenu = false;
-        _fieldExhaustTime++;
+        fieldExhaustTime++;
     }
     
     
@@ -277,7 +286,7 @@ public class MenuController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             
-            if (_fieldExhaustTime != 0)
+            if (fieldExhaustTime != 0)
             {
                 warningCanvas.SetActive(true);
             }
@@ -286,9 +295,18 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag=="Player")
+        {
+            statusWindow.SetActive(true);
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         warningCanvas.SetActive(false);
+        statusWindow.SetActive(false);
         _canOpenPlantMenu = false;
         _canOpenHarvestMenu = false;
     }
