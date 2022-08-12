@@ -1752,6 +1752,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HELP Window
       objectReference: {fileID: 0}
+    - target: {fileID: 342957022109836646, guid: 0177c2a3f408284418ece3b22f41abaa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 342957022109836647, guid: 0177c2a3f408284418ece3b22f41abaa, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
