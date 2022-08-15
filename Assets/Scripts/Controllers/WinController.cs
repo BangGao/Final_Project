@@ -62,6 +62,7 @@ public class WinController : MonoBehaviour
     private void GameWin()
     {
         winUI.SetActive(true);
+        MouseController.ShowMouse(true);
         Debug.Log("You win this Game !!!");
     }
     
