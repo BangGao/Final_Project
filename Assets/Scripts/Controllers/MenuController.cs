@@ -35,6 +35,9 @@ public class MenuController : MonoBehaviour
     public GameObject haverstMenu;
     public GameObject statusWindow;
     public GameObject warningCanvas;
+
+    [Header("WinCondition")] public GameObject gowinController;
+    private WinController _winController;
     
     [Header("Buttons in Plant Menu")]
     [SerializeField] private Button button1;
@@ -58,9 +61,6 @@ public class MenuController : MonoBehaviour
     [HideInInspector]
     public string havestType;
     
-    //HarvestPart
-    private int normalProductionNum = 5;
-    private int lowProductionNum = 0;
     
     
     private  bool _hasPlanted;
@@ -70,13 +70,14 @@ public class MenuController : MonoBehaviour
     private bool _showCursor;
     private bool _canOpenPlantMenu;
     private bool _canOpenHarvestMenu;
-    private int plantTime;
+    private int _plantTime;
     
     private PlantType _plantType;
     
     void Start()
     {
         _dayNightController = goDayNightController.GetComponent<DayNightController>();
+        _winController = gowinController.GetComponent<WinController>();
     }
     
     void Update()
@@ -128,19 +129,19 @@ public class MenuController : MonoBehaviour
 
     private void CornGrow()
     {
-        plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2 && currentPlant == "Corn")
+        _plantTime = _dayNightController.currentDay - plantDate;
+        if (_plantTime == 2 && currentPlant == "Corn")
         {
             cornStart.SetActive(false);
             cornMiddle.SetActive(true);
         }
-        else if (plantTime == 4 && currentPlant == "Corn")
+        else if (_plantTime == 4 && currentPlant == "Corn")
         {
             cornMiddle.SetActive(false);
             cornFinal.SetActive(true);
             _canbeHarvest = true;
         }
-        else if(plantTime>4)
+        else if(_plantTime>4)
         {
             _canbeHarvest = true;
         }
@@ -159,19 +160,19 @@ public class MenuController : MonoBehaviour
     
     private void WaterMelonGrow()
     {
-        plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2 && currentPlant == "WaterMelon")
+        _plantTime = _dayNightController.currentDay - plantDate;
+        if (_plantTime == 2 && currentPlant == "WaterMelon")
         {
             waterMelonStart.SetActive(false);
             waterMelonMiddle.SetActive(true);
         }
-        else if (plantTime == 4 && currentPlant == "WaterMelon")
+        else if (_plantTime == 4 && currentPlant == "WaterMelon")
         {
             waterMelonMiddle.SetActive(false);
             waterMelonFinal.SetActive(true);
             _canbeHarvest = true;
         }
-        else if(plantTime>4)
+        else if(_plantTime>4)
         {
             _canbeHarvest = true;
         }
@@ -190,19 +191,19 @@ public class MenuController : MonoBehaviour
     
     private void CabbageGrow()
     {
-        plantTime = _dayNightController.currentDay - plantDate;
-        if (plantTime == 2 && currentPlant == "Cabbage")
+        _plantTime = _dayNightController.currentDay - plantDate;
+        if (_plantTime == 2 && currentPlant == "Cabbage")
         {
             cabbageStart.SetActive(false);
             cabbageMiddle.SetActive(true);
         }
-        else if (plantTime == 4 && currentPlant == "Cabbage")
+        else if (_plantTime == 4 && currentPlant == "Cabbage")
         {
             cabbageMiddle.SetActive(false);
             cabbageFinal.SetActive(true);
             _canbeHarvest = true;
         }
-        else if(plantTime>4)
+        else if(_plantTime>4)
         {
             _canbeHarvest = true;
         }
@@ -271,14 +272,18 @@ public class MenuController : MonoBehaviour
             case "Corn":
                 cornFinal.SetActive(false);
                 havestType = "Corn";
+                _winController.cornSum++;
+                Debug.Log(_winController.cornSum);
                 break;
             case "WaterMelon":
                 waterMelonFinal.SetActive(false);
                 havestType = "WaterMelon";
+                _winController.waterMelonSum++;
                 break;
             case "Cabbage":
                 cabbageFinal.SetActive(false);
-                havestType = "WaterMelon";
+                havestType = "Cabbage";
+                _winController.cabbageSum++;
                 break;
         }
         currentPlant = "";
@@ -303,7 +308,7 @@ public class MenuController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag=="Player")
+        if (other.CompareTag("Player"))
         {
             statusWindow.SetActive(true);
         }

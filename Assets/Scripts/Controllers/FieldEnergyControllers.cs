@@ -11,11 +11,7 @@ public class FieldEnergyControllers : MonoBehaviour
   
   [Header("UI Text Component")] 
   public Text textInStatus;
-  public Slider fieldStatusSlider; 
-  
-  private int _maxPlantCorn = 2;
-  private int _maxPlantCabbage = 2;
-  private int _maxPlantWaterMalon = 2;
+  public Slider fieldStatusSlider;
 
   private int _currentPlantTimesCorn = 0;
   private int _currentPlantTimesCabbage = 0;
