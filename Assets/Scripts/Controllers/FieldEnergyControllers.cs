@@ -13,14 +13,9 @@ public class FieldEnergyControllers : MonoBehaviour
   public Text textInStatus;
   public Slider fieldStatusSlider;
 
-  private int _currentPlantTimesCorn = 0;
-  private int _currentPlantTimesCabbage = 0;
-  private int _currentPlantTimesWaterMelon = 0;
-
   private void Update()
   {
     updateText();
-    EnergyCalculator();
   }
 
 
@@ -48,24 +43,4 @@ public class FieldEnergyControllers : MonoBehaviour
     }
     
   }
-  
-  private void EnergyCalculator()
-  {
-    if (menucController.havestType != "")
-    {
-      switch (menucController.havestType)
-      {
-        case "Corn":
-          _currentPlantTimesCorn++;
-          break;
-        case "Cabbage":
-          _currentPlantTimesCabbage++;
-          break;
-        case "WaterMelon":
-          _currentPlantTimesWaterMelon++;
-          break;
-      }
-    }
-  }
-  
 }

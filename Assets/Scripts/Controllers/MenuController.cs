@@ -37,7 +37,9 @@ public class MenuController : MonoBehaviour
     public GameObject warningCanvas;
 
     [Header("WinCondition")] public GameObject gowinController;
+    //[Header("FieldEnergyController")] public GameObject goFieldEnergyController;
     private WinController _winController;
+    private FieldEnergyControllers _fieldEnergyControllers;
     
     [Header("Buttons in Plant Menu")]
     [SerializeField] private Button button1;
@@ -60,9 +62,7 @@ public class MenuController : MonoBehaviour
     
     [HideInInspector]
     public string havestType;
-    
-    
-    
+
     private  bool _hasPlanted;
     private  bool _canbeHarvest;
     private bool _pMisOpened;
@@ -78,6 +78,7 @@ public class MenuController : MonoBehaviour
     {
         _dayNightController = goDayNightController.GetComponent<DayNightController>();
         _winController = gowinController.GetComponent<WinController>();
+        _fieldEnergyControllers = transform.GetComponent<FieldEnergyControllers>();
     }
     
     void Update()
@@ -208,7 +209,6 @@ public class MenuController : MonoBehaviour
             _canbeHarvest = true;
         }
     }
-
     
     //PlantMenu Part
     private void OpenPlantMenu()
@@ -216,7 +216,7 @@ public class MenuController : MonoBehaviour
         plantMenu.SetActive(_pMisOpened);
         if (Keyboard.current.eKey.wasPressedThisFrame && _canOpenPlantMenu && _hasPlanted == false)
         {
-            if (fieldExhaustTime >= 2)
+            if (_fieldEnergyControllers.fieldStatusSlider.value == 0)
             {
                 blockWindow.SetActive(true);
                 _showCursor = !_showCursor;
@@ -233,7 +233,6 @@ public class MenuController : MonoBehaviour
 
     public void CloseBlockWindow()
     {
-        fieldExhaustTime = 0;
         blockWindow.SetActive(false);
         _showCursor = false;
         MouseController.ShowMouse(_showCursor);
@@ -288,7 +287,6 @@ public class MenuController : MonoBehaviour
         }
         currentPlant = "";
         _canOpenHarvestMenu = false;
-        fieldExhaustTime++;
     }
     
     
@@ -297,7 +295,7 @@ public class MenuController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             
-            if (fieldExhaustTime != 0)
+            if (_fieldEnergyControllers.fieldStatusSlider.value < 1.0f)
             {
                 warningCanvas.SetActive(true);
             }

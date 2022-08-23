@@ -21,18 +21,14 @@ public class WinController : MonoBehaviour
     public Text cabbageSumText;
 
     public GameObject winUI;
-
-    private void Awake()
-    {
-        //_wD = GameWin;
-    }
-
+    
     private void Update()
     {
         ShowSums();
         
-        //if (cornSum == 10 && waterMelonSum == 10 && cabbageSum == 10)
-        if (cornSum == 1)
+        //Need to be modifiy
+        //if (cornSum == 3)
+        if (cornSum == 10 && waterMelonSum == 10 && cabbageSum == 10)
         {
             FirstCallback(GameWin);
         }
@@ -57,8 +53,6 @@ public class WinController : MonoBehaviour
         _winDelegate();
     }
 
-    
-    
     private void GameWin()
     {
         winUI.SetActive(true);
